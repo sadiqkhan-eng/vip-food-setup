@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import TableFloorPlan from "@/components/TableFloorPlan";
-import { useCart } from "@/components/CartProvider";
+import { useCart } from "@/hooks/useCart";
 
 interface Table {
   id: string;
