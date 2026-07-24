@@ -3,25 +3,9 @@
 import { useState, useMemo } from "react";
 import MenuItemCard from "@/components/MenuItemCard";
 import { useCart } from "@/hooks/useCart";
+import type { Category, MenuItem } from "./MenuPageClient";
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
-
-interface MenuItem {
-  id: string;
-  categoryId: string;
-  name: string;
-  description: string | null;
-  price: string;
-  isAvailable: boolean;
-  isSpicy: boolean;
-  isVegetarian: boolean;
-}
-
-interface MenuPageClientProps {
+interface CategoryPageProps {
   categories: Category[];
   items: MenuItem[];
 }
@@ -31,7 +15,7 @@ type SortOption = "name" | "price-low" | "price-high";
 export default function MenuPageClient({
   categories,
   items,
-}: MenuPageClientProps) {
+}: CategoryPageProps) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("name");
@@ -80,6 +64,29 @@ export default function MenuPageClient({
     }
     return counts;
   }, [items, showVegOnly]);
+
+  const groupedItems = useMemo(() => {
+    const groups: Record<string, MenuItem[]> = {};
+    for (const item of filteredItems) {
+      const catId = item.categoryId;
+      if (!groups[catId]) groups[catId] = [];
+      groups[catId].push(item);
+    }
+    return groups;
+  }, [filteredItems]);
+
+  const categoryOrder = useMemo(() => {
+    const order = new Map<string, number>();
+    categories.forEach((cat, i) => order.set(cat.id, i));
+    return order;
+  }, [categories]);
+
+  const sortedCategoryIds = useMemo(() => {
+    if (activeCategory) return [activeCategory];
+    return Object.keys(groupedItems).sort(
+      (a, b) => (categoryOrder.get(a) ?? 0) - (categoryOrder.get(b) ?? 0)
+    );
+  }, [activeCategory, groupedItems, categoryOrder]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -208,8 +215,8 @@ export default function MenuPageClient({
         </p>
       </div>
 
-      {/* Items Grid */}
-      {filteredItems.length === 0 ? (
+      {/* Category Sections */}
+      {sortedCategoryIds.length === 0 ? (
         <div className="text-center py-20">
           <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-maroon/10 text-4xl">
             🔍
@@ -232,19 +239,35 @@ export default function MenuPageClient({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item) => (
-            <MenuItemCard
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              description={item.description}
-              price={parseFloat(item.price)}
-              isAvailable={item.isAvailable}
-              isSpicy={item.isSpicy}
-              isVegetarian={item.isVegetarian}
-            />
-          ))}
+        <div className="space-y-10">
+          {sortedCategoryIds.map((catId) => {
+            const catName = categories.find((c) => c.id === catId)?.name ?? "Other";
+            const catItems = groupedItems[catId];
+            return (
+              <section key={catId} className="pt-4">
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-ink mb-6 pb-2 border-b-2 border-gold/30">
+                  {catName}
+                  <span className="ml-3 text-sm font-normal text-ink/50">
+                    {catItems.length} {catItems.length === 1 ? "item" : "items"}
+                  </span>
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {catItems.map((item) => (
+                    <MenuItemCard
+                      key={item.id}
+                      id={item.id}
+                      name={item.name}
+                      description={item.description}
+                      price={parseFloat(item.price)}
+                      isAvailable={item.isAvailable}
+                      isSpicy={item.isSpicy}
+                      isVegetarian={item.isVegetarian}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
 
