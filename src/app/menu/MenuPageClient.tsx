@@ -3,11 +3,12 @@
 import { useState, useMemo } from "react";
 import MenuItemCard from "@/components/MenuItemCard";
 import { useCart } from "@/hooks/useCart";
-import type { Category, MenuItem } from "./MenuPageClient";
+import type { InferSelectModel } from "drizzle-orm";
+import { categories, menuItems } from "@/db/schema";
 
 interface CategoryPageProps {
-  categories: Category[];
-  items: MenuItem[];
+  categories: InferSelectModel<typeof categories>[];
+  items: InferSelectModel<typeof menuItems>[];
 }
 
 type SortOption = "name" | "price-low" | "price-high";
@@ -66,7 +67,7 @@ export default function MenuPageClient({
   }, [items, showVegOnly]);
 
   const groupedItems = useMemo(() => {
-    const groups: Record<string, MenuItem[]> = {};
+    const groups: Record<string, InferSelectModel<typeof menuItems>[]> = {};
     for (const item of filteredItems) {
       const catId = item.categoryId;
       if (!groups[catId]) groups[catId] = [];
