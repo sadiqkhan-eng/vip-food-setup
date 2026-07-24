@@ -1,8 +1,9 @@
 "use client";
 
-import { PlayIcon } from "./Icons";
-
 export default function VideoSection() {
+  const streetFoodVideo =
+    process.env.NEXT_PUBLIC_VIDEO_STREET_FOOD ||
+    "/video/pexels-street-food.mp4";
   return (
     <section className="relative bg-ink text-white overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
@@ -47,7 +48,7 @@ export default function VideoSection() {
           <div className="relative">
             <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-maroon-dark">
               <video
-                src="/video/pexels-street-food.mp4"
+                src={streetFoodVideo}
                 className="w-full h-full object-cover"
                 autoPlay
                 loop

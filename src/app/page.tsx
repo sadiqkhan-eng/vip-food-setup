@@ -119,8 +119,9 @@ export default function HomePage() {
             muted
             playsInline
             className="absolute inset-0 w-full h-full object-cover opacity-40"
+            preload="auto"
           >
-            <source src="/video/pexels-food-video.mp4" type="video/mp4" />
+            <source src={process.env.NEXT_PUBLIC_VIDEO_BACKGROUND || "/video/pexels-food-video.mp4"} type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-r from-maroon/70 via-maroon/50 to-maroon/30" />
         </div>
