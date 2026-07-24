@@ -92,12 +92,9 @@ export default function BookTablePage() {
           <p className="text-[#241A12]/60 mb-6">
             Your table has been booked successfully. We&apos;ll see you soon!
           </p>
-          <a
-            href="/"
-            className="inline-block rounded-full bg-[#6E1423] px-8 py-3 text-sm font-bold text-white hover:bg-[#8C1E30] transition-colors"
-          >
+          <Link href="/" className="inline-block rounded-full bg-[#6E1423] px-8 py-3 text-sm font-bold text-white hover:bg-[#8C1E30] transition-colors">
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     );

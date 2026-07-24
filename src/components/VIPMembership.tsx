@@ -82,7 +82,7 @@ export default function VIPMembership({ tier, points, totalSpent, memberSince }:
 
         {config.next === null && (
           <div className="mb-6 text-center py-2 bg-[#C9992E]/10 rounded-lg">
-            <p className="text-sm font-semibold text-[#C9992E]">You've reached the highest tier!</p>
+            <p className="text-sm font-semibold text-[#C9992E]">You&apos;ve reached the highest tier!</p>
           </div>
         )}
 

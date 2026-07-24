@@ -8,7 +8,7 @@ import VIPMembership from "@/components/VIPMembership";
 export default function AccountPage() {
   const { user } = useUser();
   const { signOut } = useClerk();
-  const [vipData, setVipData] = useState<any>(null);
+  const [vipData, setVipData] = useState<{ tier: string; points: number; totalSpent: string; memberSince: string } | null>(null);
 
   useEffect(() => {
     if (user?.id) {
