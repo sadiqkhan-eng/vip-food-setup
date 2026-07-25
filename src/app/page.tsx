@@ -172,7 +172,7 @@ export default function HomePage() {
                  className="absolute inset-0 w-full h-full object-cover opacity-40"
                  preload="auto"
                >
-                 <source src="/video/hero-section.mp4" type="video/mp4" />
+                  <source src="/api/video/pexels-food-video.mp4" type="video/mp4" />
                </video>
              );
            })()}

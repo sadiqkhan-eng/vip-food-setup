@@ -25,7 +25,7 @@ function getVimeoEmbedUrl(url: string): string {
 export default function VideoSection() {
   const streetFoodVideo =
     process.env.NEXT_PUBLIC_VIDEO_STREET_FOOD ||
-    "/video/our-kitchen-your-plate-section.mp4";
+    "/api/video/pexels-street-food.mp4";
   const isExternal = streetFoodVideo.startsWith("http");
   const isYouTube = isYouTubeUrl(streetFoodVideo);
   const isVimeo = isVimeoUrl(streetFoodVideo);
