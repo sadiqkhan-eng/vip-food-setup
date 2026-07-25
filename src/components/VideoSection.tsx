@@ -1,9 +1,39 @@
 "use client";
 
+function isYouTubeUrl(url: string): boolean {
+  return /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be)/.test(
+    url ?? ""
+  );
+}
+
+function isVimeoUrl(url: string): boolean {
+  return /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)/.test(url ?? "");
+}
+
+function getYouTubeEmbedUrl(url: string): string {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/
+  );
+  return match ? `https://www.youtube.com/embed/${match[1]}` : url;
+}
+
+function getVimeoEmbedUrl(url: string): string {
+  const match = url.match(/vimeo\.com\/(\d+)/);
+  return match ? `https://player.vimeo.com/video/${match[1]}` : url;
+}
+
 export default function VideoSection() {
   const streetFoodVideo =
     process.env.NEXT_PUBLIC_VIDEO_STREET_FOOD ||
     "/video/pexels-street-food.mp4";
+  const isExternal = streetFoodVideo.startsWith("http");
+  const isYouTube = isYouTubeUrl(streetFoodVideo);
+  const isVimeo = isVimeoUrl(streetFoodVideo);
+  const embedUrl = isYouTube
+    ? getYouTubeEmbedUrl(streetFoodVideo)
+    : isVimeo
+    ? getVimeoEmbedUrl(streetFoodVideo)
+    : "";
   return (
     <section className="relative bg-ink text-white overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
@@ -46,18 +76,39 @@ export default function VideoSection() {
           </div>
 
           <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden aspect-video bg-maroon-dark">
+            {isExternal && (isYouTube || isVimeo) ? (
+              <iframe
+                src={embedUrl}
+                className="w-full aspect-video rounded-3xl border-0"
+                allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                title="VIP Setup Kitchen Video"
+              />
+            ) : isExternal ? (
               <video
                 src={streetFoodVideo}
-                className="w-full h-full object-cover"
+                className="w-full aspect-video object-cover rounded-3xl"
                 autoPlay
                 loop
                 muted
                 playsInline
                 preload="auto"
+                crossOrigin="anonymous"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-            </div>
+            ) : (
+              <div className="relative rounded-3xl overflow-hidden aspect-video bg-maroon-dark">
+                <video
+                  src={streetFoodVideo}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                />
+              </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none rounded-3xl" />
             {/* Decorative corner */}
             <div className="absolute -top-4 -right-4 w-24 h-24 border-2 border-gold/30 rounded-3xl -z-10" />
             <div className="absolute -bottom-4 -left-4 w-24 h-24 border-2 border-gold/30 rounded-3xl -z-10" />

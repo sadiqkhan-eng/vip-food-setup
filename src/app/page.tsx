@@ -19,6 +19,27 @@ import {
   LeafIcon,
 } from "@/components/Icons";
 
+function isYouTubeUrl(url: string): boolean {
+  return /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be)/.test(
+    url ?? ""
+  );
+}
+
+function isVimeoUrl(url: string): boolean {
+  return /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)/.test(url ?? "");
+}
+
+function getYouTubeEmbedUrl(url: string): string {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/
+  );
+  return match ? `https://www.youtube.com/embed/${match[1]}` : url;
+}
+
+function getVimeoEmbedUrl(url: string): string {
+  const match = url.match(/vimeo\.com\/(\d+)/);
+  return match ? `https://player.vimeo.com/video/${match[1]}` : url;
+}
 const signatureDishes = [
   {
     name: "Chicken Biryani",
@@ -110,20 +131,52 @@ const stats = [
 export default function HomePage() {
   return (
     <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-maroon text-white min-h-[85vh] flex items-center">
-        <div className="absolute inset-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-40"
-            preload="auto"
-          >
-            <source src={process.env.NEXT_PUBLIC_VIDEO_BACKGROUND || "/video/pexels-food-video.mp4"} type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-r from-maroon/70 via-maroon/50 to-maroon/30" />
+       {/* Hero */}
+       <section className="relative overflow-hidden bg-maroon text-white min-h-[85vh] flex items-center">
+         <div className="absolute inset-0">
+           {(() => {
+             const bg = process.env.NEXT_PUBLIC_VIDEO_BACKGROUND;
+             const isYt = isYouTubeUrl(bg ?? "");
+             const isVm = isVimeoUrl(bg ?? "");
+             if (bg && (isYt || isVm)) {
+               const embed = isYt
+                 ? getYouTubeEmbedUrl(bg)
+                 : getVimeoEmbedUrl(bg);
+               return (
+                 <iframe
+                   src={embed}
+                   className="absolute inset-0 w-full h-full opacity-40"
+                   allowFullScreen
+                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                   title="VIP Setup Hero Video"
+                 />
+               );
+             }
+             return bg ? (
+               <video
+                 autoPlay
+                 loop
+                 muted
+                 playsInline
+                 className="absolute inset-0 w-full h-full object-cover opacity-40"
+                 preload="auto"
+                 crossOrigin="anonymous"
+                 src={bg}
+               />
+             ) : (
+               <video
+                 autoPlay
+                 loop
+                 muted
+                 playsInline
+                 className="absolute inset-0 w-full h-full object-cover opacity-40"
+                 preload="auto"
+               >
+                 <source src="/video/pexels-food-video.mp4" type="video/mp4" />
+               </video>
+             );
+           })()}
+           <div className="absolute inset-0 bg-gradient-to-r from-maroon/70 via-maroon/50 to-maroon/30" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
           <div className="max-w-3xl">
