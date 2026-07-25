@@ -10,6 +10,7 @@ import Seal from "./Seal";
 const publicLinks = [
   { href: "/", label: "Home" },
   { href: "/menu", label: "Menu" },
+  { href: "/chefs", label: "Chefs" },
   { href: "/book-table", label: "Book Table" },
   { href: "/reserve", label: "Reserve" },
 ];

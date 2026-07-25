@@ -131,6 +131,17 @@ export const tables = pgTable("tables", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const chefs = pgTable("chefs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  role: varchar("role", { length: 255 }).notNull(),
+  bio: text("bio"),
+  imageUrl: text("image_url"),
+  displayOrder: integer("display_order").default(0),
+  isAvailable: boolean("is_available").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const tableBookings = pgTable("table_bookings", {
   id: uuid("id").defaultRandom().primaryKey(),
   tableId: uuid("table_id")

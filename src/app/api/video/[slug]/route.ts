@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
-import { existsSync, statSync, createReadStream } from "fs";
+import { existsSync, statSync, readFileSync } from "fs";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const slug = params.slug;
+  const { slug } = await params;
   const publicDir = join(process.cwd(), "public");
   const videoPath = join(publicDir, "video", slug);
 
@@ -29,23 +29,24 @@ export async function GET(
     const start = parseInt(parts[0], 10);
     const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
     const chunkSize = end - start + 1;
+    const buffer = readFileSync(videoPath);
+    const chunk = buffer.slice(start, end + 1);
 
-    const file = createReadStream(videoPath, { start, end });
     const headers = {
       "Content-Range": `bytes ${start}-${end}/${fileSize}`,
       "Accept-Ranges": "bytes",
       "Content-Length": String(chunkSize),
       "Content-Type": "video/mp4",
     };
-    return new NextResponse(file, { status: 206, headers });
+    return new NextResponse(chunk, { status: 206, headers });
   }
 
-  const fileStream = createReadStream(videoPath);
+  const buffer = readFileSync(videoPath);
   const headers = {
     "Content-Length": String(fileSize),
     "Content-Type": "video/mp4",
     "Accept-Ranges": "bytes",
     "Content-Disposition": "inline",
   };
-  return new NextResponse(fileStream, { status: 200, headers });
+  return new NextResponse(buffer, { status: 200, headers });
 }
