@@ -1,5 +1,5 @@
 export default function VideoSection() {
-  const streetFoodVideo = "/api/video/our-kitchen-your-plate-section.mp4";
+  const streetFoodVideo = "/video/our-kitchen-your-plate-section.mp4";
   return (
     <section className="relative bg-ink text-white overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">

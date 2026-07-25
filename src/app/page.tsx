@@ -120,7 +120,7 @@ export default function HomePage() {
               playsInline
               className="absolute inset-0 w-full h-full object-cover opacity-40"
               preload="auto"
-              src="/api/video/hero-section.mp4"
+              src="/video/hero-section.mp4"
             />
            <div className="absolute inset-0 bg-gradient-to-r from-maroon/70 via-maroon/50 to-maroon/30" />
         </div>
