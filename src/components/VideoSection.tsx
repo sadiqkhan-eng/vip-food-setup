@@ -46,7 +46,7 @@ export default function VideoSection() {
           </div>
 
           <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-maroon-dark">
+            <div className="relative rounded-3xl overflow-hidden aspect-video bg-maroon-dark">
               <video
                 src={streetFoodVideo}
                 className="w-full h-full object-cover"
@@ -54,6 +54,7 @@ export default function VideoSection() {
                 loop
                 muted
                 playsInline
+                preload="auto"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
             </div>
